@@ -1,0 +1,22 @@
+service fps_hal /vendor/bin/hw/android.hardware.biometrics.fingerprint@2.0-service-kenzo
+    # "class hal" causes a race condition on some devices due to files created
+    # in /data. As a workaround, postpone startup until later in boot once
+    # /data is mounted.
+    class late_start
+    user system
+    group system input
+    disabled
+
+service fingerprintd /system/bin/fingerprintd
+    class late_start
+    user system
+    group drmrpc input system
+    socket fpce stream 0660 system system
+#    writepid /dev/cpuset/system-background/tasks
+
+service gx_fpd /vendor/bin/gx_fpd
+    class late_start
+    user system
+    group system
+    disabled
+#    writepid /dev/cpuset/system-background/tasks
